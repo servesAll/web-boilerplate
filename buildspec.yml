@@ -1,0 +1,19 @@
+version: 0.1
+
+phases:
+  build:
+    commands:
+      - echo "***** Compiling Front-end *****"
+      - npm install
+      - npm install webpack -g
+      - npm run $BUILD
+  post_build:
+    commands:
+      - echo "***** Uploading to S3 *****"
+      - aws ecr get-login --region eu-west-1
+      - cd ./build && aws s3 sync . s3://$S3_BUCKET_DEST
+    artifacts:
+    files:
+    - '*'
+    - '**'
+    - "*"
